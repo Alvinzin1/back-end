@@ -49,6 +49,15 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->wallet = 1000.00;
+        });
+    }
+
     public function store()
     {
         return $this->hasMany(Store::class);

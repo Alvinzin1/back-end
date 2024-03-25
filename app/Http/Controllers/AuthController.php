@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
+    }
+    
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -21,7 +27,10 @@ class AuthController extends Controller
             return response()->json(['error' => 'Could not create token'], 500);
         }
 
+        $user = Auth::user();
+
         return response()->json([
+            'user' => $user,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => 3600
@@ -34,11 +43,22 @@ class AuthController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
-            'wallet' => 1000.00
         ]);
 
         $token = JWTAuth::fromUser($user);
+    
+        return response()->json([
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => 3600
+        ]);
+    }
 
-        return response()->json(compact('token'));
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json(['message' => 'Logout Success']);
     }
 }
