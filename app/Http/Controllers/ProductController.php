@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category_Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -42,6 +43,13 @@ class ProductController extends Controller
                 'store_id' => $request->store_id,
             ]);
 
+            foreach ($request->categories as $category) {
+                Category_Product::create([
+                    'category_id' => $category,
+                    'product_id' => $product['id']
+                ]);
+            }
+
             return response()->json(['product' => $product, 'message' => 'Produto criada com sucesso'], 201);
         } catch (ValidationException $e) {
             return response()->json(['message' => 'Erro ao criar produto.', 'errors' => $e->errors()], 422);
@@ -55,7 +63,15 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $product = Product::where('id', $id)->with('categories')->with('store')->first();
+
+            return response()->json(['product' => $product], 201);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Erro ao pegar o produto.', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Falha de conexão com o banco de dados', 'error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -84,12 +100,21 @@ class ProductController extends Controller
                 'price' => $request->price,
             ]);
 
+            $product->category_product()->where('product_id', $product['id'])->delete();
+            
+            foreach ($request->categories as $category) {
+                Category_Product::create([
+                    'category_id' => $category,
+                    'product_id' => $product['id']
+                ]);
+            }
+
             return response()->json([
                 'product' => $product, 
-                'message' => 'Loja criada com sucesso'
+                'message' => 'Produto criado com sucesso'
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['message' => 'Erro ao criar loja.', 'errors' => $e->errors()], 422);
+            return response()->json(['message' => 'Erro ao criar produto.', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Falha de conexão com o banco de dados', 'error' => $e->getMessage()]);
         }
@@ -120,7 +145,7 @@ class ProductController extends Controller
     }
 
     public function getProductsAll(){
-        $products = Product::with('categories')->with('store')->get();
+        $products = Product::with('categories')->with('store')->with('categories')->get();
 
         return response()->json([
             'products' => $products

@@ -44,7 +44,7 @@ class StoreController extends Controller
                 'name' => $request->name,
                 'description' => $request->description,
                 'address' => $request->address,
-                'user_id' => $user->id,
+                'user_id' => $user['id'],
             ]);
 
             return response()->json(['store' => $store, 'message' => 'Loja criada com sucesso'], 201);

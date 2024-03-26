@@ -1,66 +1,52 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Backend - Laravel API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto back-end foi desenvolvido inteiramente em Laravel e serve como complemento ao sistema de cadastro de estabelecimentos, produtos e compras, cujo front-end foi desenvolvido com Vue.js.
 
-## About Laravel
+## Migrations, Factories e Seeders
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O projeto já inclui migrations prontas para as tabelas essenciais do sistema, bem como factories e seeders para popular o banco de dados com dados de exemplo. As migrations disponíveis são:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **users**: responsável por armazenar os dados dos usuários do sistema.
+- **stores**: responsável pelo armazenamento de informações sobre os estabelecimentos cadastrados.
+- **products**: responsável pelo armazenamento dos produtos disponíveis para compra.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Já os seeders disponíveis são:
 
-## Learning Laravel
+- **UserTableSeeder**: responsável por popular a tabela de usuários com dados de exemplo.
+- **StoreTableSeeder**: responsável por popular a tabela de estabelecimentos com dados de exemplo.
+- **ProductTableSeeder**: responsável por popular a tabela de produtos com dados de exemplo.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Organização das Rotas da API
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+As rotas da API foram organizadas de forma a seguir as melhores práticas de desenvolvimento e facilitar a integração com o front-end. Abaixo está a lista das principais rotas disponíveis:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- `/login`: Rota para autenticar um usuário e obter um token de acesso.
+- `/register`: Rota para registrar um novo usuário no sistema.
+- `/product/show/{id}`: Rota para exibir detalhes de um produto específico.
+- `/product/getProductsAll`: Rota para obter todos os produtos cadastrados.
+- `/product/getProductsBySearch/{searchTerm}`: Rota para buscar produtos por termo de pesquisa.
+- `/product/getProductsCheap`: Rota para obter produtos mais baratos.
 
-## Laravel Sponsors
+Rotas autenticadas, que requerem token JWT:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- `/store/store`: Rota para cadastrar um novo estabelecimento.
+- `/store/update`: Rota para atualizar informações de um estabelecimento.
+- `/store/delete/{id}`: Rota para excluir um estabelecimento.
+- `/store/getStoresByUser`: Rota para obter os estabelecimentos cadastrados por um usuário.
 
-### Premium Partners
+- `/product/store`: Rota para cadastrar um novo produto.
+- `/product/update`: Rota para atualizar informações de um produto.
+- `/product/delete/{id}`: Rota para excluir um produto.
+- `/product/getProductsByStore/{id}`: Rota para obter os produtos de um determinado estabelecimento.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- `/category/store`: Rota para cadastrar uma nova categoria de produto.
+- `/category/getCategoriesAll`: Rota para obter todas as categorias cadastradas.
 
-## Contributing
+- `/request/store`: Rota para fazer uma solicitação de compra.
+- `/request/getRequestsByUser`: Rota para obter as solicitações feitas por um usuário.
+- `/request/getRequestsByStore/{îd}`: Rota para obter as solicitações feitas para um estabelecimento.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- `/logout`: Rota para deslogar o usuário e invalidar o token JWT.
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+Este backend foi desenvolvido para fornecer uma API robusta e segura para integração com o front-end Vue.js. Consulte a documentação oficial do Laravel para mais detalhes sobre o desenvolvimento com este framework.
